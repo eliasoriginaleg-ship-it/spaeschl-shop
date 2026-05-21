@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Spaßartikel-Generator – Kompaktversion</title>
+
+<style>
+body {
+    font-family: Consolas, monospace;
+    background:#111;
+    color:#eee;
+    margin:0;
+    padding:20px;
+    display:flex;
+    justify-content:center;
+}
+.wrapper {
+    width:100%;
+    max-width:1920px;
+}
+
+/* --- Controls --- */
+.controls {
+    background:#000;
+    border:1px solid #555;
+    padding:10px;
+    margin-bottom:20px;
+}
+.controls input {
+    width:100%;
+    background:#222;
+    color:#eee;
+    border:1px solid #555;
+    padding:4px 6px;
+    font-family:inherit;
+}
+
+/* --- Buttons --- */
+button {
+    font-family: inherit;
+    font-size: 18px;
+    padding: 8px 14px;
+    background: #222;
+    color: #eee;
+    border: 1px solid #555;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top:6px;
+}
+button:hover { background:#333; }
+
+/* --- Layout Grid --- */
+.layouts { display:flex; flex-direction:column; gap:20px; }
+.row { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
+.col { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.title { font-size:14px; color:#ccc; }
+
+/* --- Base Layout --- */
+.layout {
+    position:relative;
+    background:#f5f5f5;
+    border:2px solid #000;
+    padding:15px;
+    box-shadow:0 0 20px rgba(0,0,0,0.6);
+    color:#000;
+}
+.layout::after {
+    content:"© Elias Gstrein";
+    position:absolute;
+    bottom:10px; right:10px;
+    opacity:0.18;
+    color:white;
+    text-shadow:0 0 4px black;
+    font-size:16px;
+}
+
+/* --- Shared Image Box (immer quadratisch) --- */
+.imgbox {
+    width:280px !important;
+    height:280px !important;
+    background-size:cover;
+    background-position:center;
+    border:2px solid #000;
+    margin:0 auto;
+    flex-shrink:0;
+}
+
+/* --- UNSICHTBARER TEXTRAHMEN --- */
+.textbox {
+    width:100%;
+    max-width:100%;
+    overflow-wrap:break-word;
+    word-wrap:break-word;
+    white-space:normal;
+    box-sizing:border-box;
+    padding:4px;
+}
+
+/* --- Editierbare Felder --- */
+.editable {
+    outline:none;
+    cursor:text;
+}
+.editable:focus {
+    background:rgba(255,255,0,0.15);
+}
+
+/* --- Polaroid --- */
+.polaroid {
+    width:308px;
+    height:360px;
+    background:#fff;
+    padding:20px 14px 60px;
+    border:2px solid #000;
+    font-family: Forte, Georgia, serif !important;
+}
+.polaroid .headline {
+    position:absolute;
+    bottom:20px;
+    width:90%;
+    left:5%;
+    text-align:center;
+    font-family: Forte, Georgia, serif !important;
+    font-size:22px;
+}
+
+/* --- Newspaper Hochformat --- */
+.newspaper-h {
+    width:540px;
+    height:960px;
+    background:#f2f2f2;
+    border:2px solid #000;
+}
+.newspaper-h .headline {
+    text-align:center;
+    font-size:28px;
+    font-weight:900;
+    border-bottom:2px solid #000;
+}
+.newspaper-h .subline {
+    text-align:center;
+    margin-bottom:15px;
+}
+.newspaper-h #txt-h {
+    padding:10px;
+    font-size:18px;
+}
+
+/* --- Newspaper Querformat (mit 2 Zeichen weniger Breite) --- */
+.newspaper-q {
+    width:960px;
+    height:540px;
+    background:#f2f2f2;
+    border:2px solid #000;
+}
+.newspaper-q .headline {
+    text-align:center;
+    font-size:28px;
+    font-weight:900;
+    border-bottom:2px solid #000;
+}
+.newspaper-q .subline {
+    text-align:center;
+    margin-bottom:10px;
+}
+.newspaper-q .spread {
+    display:flex;
+    gap:20px;
+}
+
+/* Textbereich links – um 2 Zeichen schmäler */
+.newspaper-q #txt-q {
+    padding:10px;
+    font-size:18px;
+    flex:1;
+    max-width: calc(100% - 340px); /* 280px Bild + 20px Abstand + 40px (≈2 Zeichen) */
+}
+
+/* Bild rechts bleibt quadratisch */
+.newspaper-q .imgbox {
+    width:280px !important;
+    height:280px !important;
+    flex-shrink:0;
+}
+
+/* --- Wanted --- */
+.wanted {
+    width:450px;
+    height:600px;
+    background:#fdf5e6;
+    text-align:center;
+    border:2px solid #000;
+}
+.wanted .headline { font-size:32px; font-weight:900; }
+.wanted .reward { margin-top:10px; font-weight:bold; }
+</style>
+</head>
+
+<body oncontextmenu="return false;">
+<div class="wrapper">
+
+<h1>Spaßartikel-Generator – Kompaktversion</h1>
+
+<!-- ================= CONTROLS ================= -->
+<div class="controls">
+    <label>Bild auswählen:
+        <input type="file" id="bild" accept="image/*">
+    </label>
+</div>
+
+<!-- ================= LAYOUTS ================= -->
+<div class="layouts">
+
+    <!-- OBERSTE REIHE -->
+    <div class="row">
+
+        <!-- POLAROID -->
+        <div class="col">
+            <div class="title">Polaroid</div>
+            <div id="polaroid" class="layout polaroid">
+                <div class="imgbox" id="img-polaroid"></div>
+
+                <div class="headline editable textbox" id="txt-polaroid-head" contenteditable="true">
+                    Dein Text hier…
+                </div>
+            </div>
+            <button onclick="exportPNG('polaroid','polaroid.png')">Als PNG speichern</button>
+        </div>
+
+        <!-- ZEITUNG HOCHFORMAT -->
+        <div class="col">
+            <div class="title">Zeitung Hochformat</div>
+            <div id="zeitungH" class="layout newspaper-h">
+                <div class="headline editable textbox" contenteditable="true">Späschl Tagesblatt</div>
+                <div class="subline editable textbox" contenteditable="true">Aktuelle Sondermeldung</div>
+                <div class="imgbox" id="img-h"></div>
+
+                <div id="txt-h" class="editable textbox" contenteditable="true">
+                    Absatz 1…<br><br>Absatz 2…<br><br>Absatz 3…
+                </div>
+            </div>
+            <button onclick="exportPNG('zeitungH','zeitung-h.png')">Als PNG speichern</button>
+        </div>
+
+        <!-- WANTED -->
+        <div class="col">
+            <div class="title">Wanted</div>
+            <div id="wanted" class="layout wanted">
+                <div class="headline editable textbox" contenteditable="true">GESUCHT</div>
+                <div class="imgbox" id="img-wanted"></div>
+                <div class="reward editable textbox" contenteditable="true">Hinweise erbeten</div>
+
+                <div id="txt-wanted" class="editable textbox" contenteditable="true">
+                    Beschreibung hier…
+                </div>
+            </div>
+            <button onclick="exportPNG('wanted','wanted.png')">Als PNG speichern</button>
+        </div>
+
+    </div>
+
+    <!-- UNTERE REIHE -->
+    <div class="row">
+        <div class="col">
+            <div class="title">Zeitung Querformat</div>
+            <div id="zeitungQ" class="layout newspaper-q">
+                <div class="headline editable textbox" contenteditable="true">Späschl Tagesblatt</div>
+                <div class="subline editable textbox" contenteditable="true">Aktuelle Sondermeldung</div>
+
+                <div class="spread">
+                    <div id="txt-q" class="editable textbox" contenteditable="true">
+                        Absatz 1…<br><br>Absatz 2…<br><br>Absatz 3…
+                    </div>
+
+                    <div class="imgbox" id="img-q"></div>
+                </div>
+            </div>
+            <button onclick="exportPNG('zeitungQ','zeitung-q.png')">Als PNG speichern</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+let imgData = null;
+
+/* Bild laden */
+document.getElementById("bild").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = ev => { imgData = ev.target.result; updateImages(); };
+    r.readAsDataURL(file);
+});
+
+/* Bild in alle Mockups einsetzen */
+function updateImages() {
+    ["img-polaroid","img-h","img-q","img-wanted"].forEach(id => {
+        const el = document.getElementById(id);
+        if (imgData) {
+            el.style.backgroundImage = `url('${imgData}')`;
+            el.innerHTML = "";
+        } else {
+            el.style.backgroundImage = "none";
+            el.innerHTML = "<div style='padding-top:120px;text-align:center;'>Kein Bild geladen.</div>";
+        }
+    });
+}
+
+/* Export als PNG */
+function exportPNG(id, filename) {
+    const el = document.getElementById(id);
+
+    html2canvas(el, { backgroundColor:null, scale:2 }).then(src => {
+        const size = 1024;
+        const dst = document.createElement("canvas");
+        dst.width = dst.height = size;
+        const ctx = dst.getContext("2d");
+
+        const scale = Math.min(size/src.width, size/src.height);
+        const w = src.width * scale;
+        const h = src.height * scale;
+        const x = (size - w) / 2;
+        const y = (size - h) / 2;
+
+        ctx.drawImage(src, 0, 0, src.width, src.height, x, y, w, h);
+
+        const a = document.createElement("a");
+        a.download = filename;
+        a.href = dst.toDataURL("image/png");
+        a.click();
+    });
+}
+
+updateImages();
+</script>
+
+</div>
+</body>
+</html>
