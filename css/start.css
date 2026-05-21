@@ -1,0 +1,100 @@
+/* Grundschrift für die gesamte Seite */
+body {
+    font-family: "Franklin Gothic Medium", Arial, sans-serif;
+    font-size: 22px;
+    line-height: 1.4;
+    color: #000;
+}
+
+/* Navigation links */
+nav h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+nav a {
+    display: block;
+    font-size: 22px;
+    margin: 4px 0;
+    text-decoration: none;
+    color: #000;
+}
+
+/* Hauptüberschrift */
+main h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+/* Preisüberschriften */
+.price-header {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+}
+
+/* Grid für die Produktbilder */
+.start-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+/* Bilder */
+.col img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid black;
+    background: black;
+}
+
+/* ========================================================= */
+/*   KOPIERSCHUTZ + DIAGONALES WASSERZEICHEN PRO BILD        */
+/* ========================================================= */
+
+/* Wrapper für jedes Bild */
+.col {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Großes diagonales Wasserzeichen über das ganze Bild */
+.col::before {
+    content: "© Elias Gstrein";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-size: 64px; /* groß über das ganze Bild */
+    color: rgba(255,255,255,0.12);
+    text-shadow: 0 0 8px rgba(0,0,0,0.7);
+    pointer-events: none;
+    z-index: 2;
+    white-space: nowrap;
+}
+
+/* Kleines Wasserzeichen unten rechts */
+.col::after {
+    content: "© Elias Gstrein";
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    font-size: 16px;
+    color: white;
+    opacity: 0.25;
+    text-shadow: 0 0 4px black;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Bild selbst un-dragbar, un-klickbar, un-markierbar */
+.col img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+    user-select: none;
+    z-index: 1;
+}
