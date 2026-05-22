@@ -19,13 +19,15 @@
 
     <p>
         Bitte fülle das folgende Formular aus.  
-        Nach dem Absenden öffnet sich dein E‑Mail‑Programm mit einer fertigen Nachricht.
+        Deine Bestellung wird sicher übermittelt.
     </p>
 
-    <form action="mailto:eliasoriginal.eg@gmail.com?subject=Neue%20Bestellung"
-          method="post"
-          enctype="text/plain"
+    <!-- ⭐ FORMSPREE FORMULAR ⭐ -->
+    <form action="https://formspree.io/f/xqejbpkj" method="POST"
           style="font-family:'Franklin Gothic Medium'; font-size:22px;">
+
+        <!-- Betreff für die E-Mail -->
+        <input type="hidden" name="_subject" value="Neue Produktbestellung">
 
         <p><label>Name:<br>
         <input type="text" name="Name" required
@@ -45,6 +47,7 @@
             <option value="Grußkarte">Grußkarte</option>
             <option value="Kissenüberzug">Kissenüberzug 22×22</option>
             <option value="Sofadecke">Sofadecke 50×60</option>
+            <option value="Bettwäsche">Bettwäsche</option>
         </select></label></p>
 
         <p><label>Kategorie:<br>
@@ -105,17 +108,9 @@
         Bezahlung
     </h2>
 
-    <p>Die Bezahlung erfolgt ausschließlich über PayPal.</p>
-
     <p>
-        PayPal akzeptiert:
-        <br>– Banküberweisung (über PayPal)
-        <br>– Lastschrift
-        <br>– Kreditkarte
-        <br>– PayPal‑Guthaben
+        Es wird derzeit an weiteren Zahlungsmöglichkeiten gearbeitet.
     </p>
-
-    <p>Du erhältst den PayPal‑Link automatisch nach deiner Bestellung.</p>
 
 </main>
 
