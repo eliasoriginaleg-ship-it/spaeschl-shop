@@ -26,20 +26,19 @@
     <form action="https://formspree.io/f/xqejbpkj" method="POST"
           style="font-family:'Franklin Gothic Medium'; font-size:22px;">
 
-        <!-- Betreff für die E-Mail -->
         <input type="hidden" name="_subject" value="Neue Produktbestellung">
 
         <p><label>Name:<br>
         <input type="text" name="Name" required
-               style="width:400px; font-size:22px; font-family:'Franklin Gothic Medium';"></label></p>
+               style="width:400px; font-size:22px;"></label></p>
 
         <p><label>E-Mail:<br>
         <input type="email" name="E-Mail" required
-               style="width:400px; font-size:22px; font-family:'Franklin Gothic Medium';"></label></p>
+               style="width:400px; font-size:22px;"></label></p>
 
         <p><label>Produkt:<br>
         <select name="Produkt" required
-                style="width:400px; font-size:22px; font-family:'Franklin Gothic Medium';">
+                style="width:400px; font-size:22px;">
             <option value="">Bitte wählen…</option>
             <option value="Tasse Emaille">Tasse – Emaille</option>
             <option value="Tasse Keramik">Tasse – Keramik</option>
@@ -52,7 +51,7 @@
 
         <p><label>Kategorie:<br>
         <select name="Kategorie" required
-                style="width:400px; font-size:22px; font-family:'Franklin Gothic Medium';">
+                style="width:400px; font-size:22px;">
             <option value="">Bitte wählen…</option>
             <option>Berglandschaft</option>
             <option>Berglandschaft m. Wolke</option>
@@ -80,36 +79,38 @@
 
         <p><label>Motiv (Bildnummer):<br>
         <input type="text" name="Motiv_Bildnummer" required
-               style="width:400px; font-size:22px; font-family:'Franklin Gothic Medium';"
+               style="width:400px; font-size:22px;"
                placeholder="z.B. Bild-Nr. 12"></label></p>
 
         <p><label>Anzahl:<br>
         <input type="number" name="Anzahl" min="1" value="1" required
-               style="width:120px; font-size:22px; font-family:'Franklin Gothic Medium';"></label></p>
+               style="width:120px; font-size:22px;"></label></p>
 
         <p><label>Versandadresse:<br>
         <textarea name="Adresse" rows="3" required
-                  style="width:400px; font-size:22px; font-family:'Franklin Gothic Medium';"></textarea></label></p>
+                  style="width:400px; font-size:22px;"></textarea></label></p>
 
         <p><label>Nachricht (optional):<br>
         <textarea name="Nachricht" rows="4"
-                  style="width:400px; font-size:22px; font-family:'Franklin Gothic Medium';"></textarea></label></p>
+                  style="width:400px; font-size:22px;"></textarea></label></p>
 
         <p>
             <button type="submit"
-                    style="font-size:22px; font-family:'Franklin Gothic Medium'; padding:10px 20px;">
+                    style="font-size:22px; padding:10px 20px;">
                 Bestellung absenden
             </button>
         </p>
 
     </form>
 
+    <!-- ⭐ PROFESSIONELLER ZAHLUNGSTEXT ⭐ -->
     <h2 style="font-family:'Franklin Gothic Medium'; font-size:28px; margin-top:40px;">
-        Bezahlung
+        Zahlung
     </h2>
 
     <p>
-        Es wird derzeit an weiteren Zahlungsmöglichkeiten gearbeitet.
+        Derzeit steht <strong>PayPal</strong> als sichere und schnelle Zahlungsmethode zur Verfügung.  
+        Weitere Zahlungsoptionen — darunter <strong>Banküberweisung</strong> und <strong>Stripe</strong> — befinden sich in Vorbereitung.
     </p>
 
 </main>
