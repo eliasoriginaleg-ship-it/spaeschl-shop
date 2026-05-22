@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Sternbild</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav>
+    <h2>Kategorien</h2>
+    <a href="Alpenlandschaft.html">Alpenlandschaft</a>
+    <a href="Blumeninsel.html">Blumeninsel</a>
+    <a href="Comic.html">Comic</a>
+    <a href="Feuerwerk.html">Feuerwerk</a>
+    <a href="Geburtstag.html">Geburtstag</a>
+    <a href="Hochzeit.html">Hochzeit</a>
+    <a href="Kerze.html">Kerze</a>
+    <a href="Lebkuchenherz.html">Lebkuchenherz</a>
+    <a href="Lichternacht.html">Lichternacht</a>
+    <a href="Luftballon.html">Luftballon</a>
+    <a href="Neonschild.html">Neonschild</a>
+    <a href="Nostalgie.html">Nostalgie</a>
+    <a href="Ostern.html">Ostern</a>
+    <a href="Planeten.html">Planeten</a>
+    <a href="Speziell.html">Speziell</a>
+    <a href="Sprüche.html">Sprüche</a>
+    <a href="Sternbild.html">Sternbild</a>
+    <a href="Tierfreundschaft.html">Tierfreundschaft</a>
+    <a href="Uhr.html">Uhr</a>
+    <a href="Weihnachten.html">Weihnachten</a>
+</nav>
+
+<main>
+    <h1>Sternbild</h1>
+    <p><a href="../index.html">Zur Übersicht</a></p>
+
+    <div class="gallery" style="display:flex; gap:20px; flex-wrap:wrap;">
+
+    <img src="../bilder/Sternbild_1.jpeg"
+         width="350" height="350"
+         style="object-fit:contain; border:1px solid black; pointer-events:none; user-select:none;"
+     draggable="false"
+     oncontextmenu="return false;">
+
+    <img src="../bilder/Sternbild_2.jpeg"
+         width="350" height="350"
+         style="object-fit:contain; border:1px solid black; pointer-events:none; user-select:none;"
+     draggable="false"
+     oncontextmenu="return false;">
+
+    <img src="../bilder/Sternbild_3.jpeg"
+         width="350" height="350"
+         style="object-fit:contain; border:1px solid black; pointer-events:none; user-select:none;"
+     draggable="false"
+     oncontextmenu="return false;">
+
+</div>
+
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.querySelectorAll("img").forEach(img => {
+
+        // Wrapper erstellen
+        const wrapper = document.createElement("div");
+        wrapper.style.position = "relative";
+        wrapper.style.display = "inline-block";
+        wrapper.style.overflow = "hidden";
+
+        // Bild ersetzen
+        img.parentNode.insertBefore(wrapper, img);
+        wrapper.appendChild(img);
+
+        // Bild selbst schützen
+        img.style.pointerEvents = "none";
+        img.style.userSelect = "none";
+        img.style.webkitUserDrag = "none";
+
+        // Großes diagonales Wasserzeichen
+        const wm = document.createElement("div");
+        wm.textContent = "© Elias Gstrein";
+        wm.style.position = "absolute";
+        wm.style.top = "50%";
+        wm.style.left = "50%";
+        wm.style.transform = "translate(-50%, -50%) rotate(-25deg)";
+        wm.style.fontSize = "64px";          // groß über das ganze Bild
+        wm.style.color = "rgba(255,255,255,0.12)";
+        wm.style.textShadow = "0 0 8px rgba(0,0,0,0.7)";
+        wm.style.pointerEvents = "none";
+        wm.style.whiteSpace = "nowrap";
+        wm.style.zIndex = "2";
+        wrapper.appendChild(wm);
+
+        // Kleines Wasserzeichen unten rechts
+        const wmSmall = document.createElement("div");
+        wmSmall.textContent = "© Elias Gstrein";
+        wmSmall.style.position = "absolute";
+        wmSmall.style.bottom = "6px";
+        wmSmall.style.right = "6px";
+        wmSmall.style.fontSize = "16px";
+        wmSmall.style.color = "white";
+        wmSmall.style.opacity = "0.25";
+        wmSmall.style.textShadow = "0 0 4px black";
+        wmSmall.style.pointerEvents = "none";
+        wmSmall.style.zIndex = "2";
+        wrapper.appendChild(wmSmall);
+
+        // Transparentes Anti‑Screenshot‑Overlay
+        const overlay = document.createElement("div");
+        overlay.style.position = "absolute";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100%";
+        overlay.style.height = "100%";
+        overlay.style.background = "transparent";
+        overlay.style.pointerEvents = "none";
+        overlay.style.zIndex = "3";
+        wrapper.appendChild(overlay);
+
+    });
+
+});
+</script>
+
+
+</body>
+</html>
