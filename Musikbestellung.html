@@ -2,129 +2,174 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schallplatten-Bestellung</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        main {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 16px;
+            font-family: 'Franklin Gothic Medium', Arial, sans-serif;
+            font-size: 21px;
+        }
+        h1 { font-size: 34px; margin-top: 0; }
+        h2 { font-size: 27px; margin-top: 0; }
+        h3 { font-size: 22px; margin-bottom: 10px; }
+        .note { font-size: 17px; line-height: 1.45; }
+        .order-panel {
+            border: 1px solid #b8b8b8;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 22px 0;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+            gap: 18px;
+            align-items: stretch;
+        }
+        .product-card {
+            border: 1px solid #d0d0d0;
+            border-radius: 10px;
+            padding: 16px;
+            min-width: 0;
+        }
+        .product-card h3 { margin-top: 0; }
+        .track-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .track-side { min-width: 0; }
+        .track-input, .text-input, .address-input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 8px;
+            margin: 4px 0 8px;
+            font-size: 19px;
+            font-family: inherit;
+        }
+        .quantity-input {
+            box-sizing: border-box;
+            width: 135px;
+            max-width: 100%;
+            padding: 8px;
+            font-size: 19px;
+            font-family: inherit;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .details-grid p { margin-top: 8px; }
+        button {
+            font-family: inherit;
+            font-size: 21px;
+            padding: 11px 20px;
+            cursor: pointer;
+        }
+        @media (max-width: 760px) {
+            main { font-size: 19px; }
+            h1 { font-size: 30px; }
+            h2 { font-size: 25px; }
+            .product-grid, .track-grid, .details-grid { grid-template-columns: 1fr; }
+            .order-panel { padding: 12px; }
+            .product-card { padding: 13px; }
+        }
+    </style>
 </head>
 <body>
-
-<main style="font-family:'Franklin Gothic Medium', Arial, sans-serif; font-size:22px;">
-
+<main>
     <p style="margin-top:0;">
-        <a href="index.html" style="font-family:'Franklin Gothic Medium'; font-size:22px;">Startseite</a>
+        <a href="index.html">Startseite</a>
         &nbsp;|&nbsp;
-        <a href="Musik.html" style="font-family:'Franklin Gothic Medium'; font-size:22px;">Zur Musik-Übersicht</a>
+        <a href="Musik.html">Zur Musik-Übersicht</a>
     </p>
 
-    <h1 style="font-family:'Franklin Gothic Medium'; font-size:34px; margin-top:0;">
-        Schallplatten bestellen
-    </h1>
-
+    <h1>Schallplatten bestellen</h1>
     <p>
-        Bitte trage die Titel für Seite A und B ein.  
-        Die Schallplatten werden mit <strong>33 U/min</strong> ausgegeben.
+        Wähle in der gemeinsamen Bestellübersicht die gewünschte Schallplatte und die Anzahl aus.
+        Bei der individuell zusammengestellten 7-Zoll-Platte kannst du zusätzlich die Titel für Seite A und B eintragen.
     </p>
 
-    <!-- ⭐ FORMULAR MIT FORMSPREE ⭐ -->
-    <form action="https://formspree.io/f/xqejbpkj" method="POST" style="font-family:'Franklin Gothic Medium'; font-size:22px;">
+    <form action="mailto:eliasoriginal.eg@gmail.com?subject=Neue%20Schallplattenbestellung"
+          method="post" enctype="text/plain">
 
-        <input type="hidden" name="_subject" value="Neue Schallplattenbestellung">
+        <section class="order-panel" aria-labelledby="order-heading">
+            <h2 id="order-heading">Deine Bestellung</h2>
+            <div class="product-grid">
+                <section class="product-card" aria-labelledby="lp-heading">
+                    <h3 id="lp-heading">12″ LP – Best of E. Gstrein / Späschl Pipe Organs</h3>
+                    <p>Fest zusammengestelltes Album. Eine Titelauswahl ist nicht erforderlich.</p>
+                    <p class="note">Ausgabe mit 33 U/min.</p>
+                    <label for="lp-quantity">Anzahl der LPs:<br>
+                        <input class="quantity-input" id="lp-quantity" type="number"
+                               name="Anzahl_12Zoll_LP_Best_of" min="0" step="1" value="0" required>
+                    </label>
+                </section>
 
-        <p><label>Name:<br>
-        <input type="text" name="Name" required style="width:400px; font-size:22px;"></label></p>
+                <section class="product-card" aria-labelledby="single-heading">
+                    <h3 id="single-heading">7″ – individuell zusammengestellte Schallplatte</h3>
+                    <p class="note">Bis zu 3 Titel pro Seite. Bitte gib die gewünschten Titel an, wenn du eine 7-Zoll-Platte bestellen möchtest.</p>
+                    <div class="track-grid">
+                        <div class="track-side">
+                            <h3>Seite A</h3>
+                            <label for="7-a1">Titel A1:<br>
+                                <input class="track-input" id="7-a1" type="text" name="7Zoll_SeiteA_Titel1" placeholder="Titel A1">
+                            </label>
+                            <label for="7-a2">Titel A2 (optional):<br>
+                                <input class="track-input" id="7-a2" type="text" name="7Zoll_SeiteA_Titel2" placeholder="Titel A2">
+                            </label>
+                            <label for="7-a3">Titel A3 (optional):<br>
+                                <input class="track-input" id="7-a3" type="text" name="7Zoll_SeiteA_Titel3" placeholder="Titel A3">
+                            </label>
+                        </div>
+                        <div class="track-side">
+                            <h3>Seite B</h3>
+                            <label for="7-b1">Titel B1:<br>
+                                <input class="track-input" id="7-b1" type="text" name="7Zoll_SeiteB_Titel1" placeholder="Titel B1">
+                            </label>
+                            <label for="7-b2">Titel B2 (optional):<br>
+                                <input class="track-input" id="7-b2" type="text" name="7Zoll_SeiteB_Titel2" placeholder="Titel B2">
+                            </label>
+                            <label for="7-b3">Titel B3 (optional):<br>
+                                <input class="track-input" id="7-b3" type="text" name="7Zoll_SeiteB_Titel3" placeholder="Titel B3">
+                            </label>
+                        </div>
+                    </div>
+                    <label for="single-quantity">Anzahl der 7″-Schallplatten:<br>
+                        <input class="quantity-input" id="single-quantity" type="number"
+                               name="Anzahl_7Zoll_Schallplatten" min="0" step="1" value="0" required>
+                    </label>
+                    <p class="note">Wenn du keine 7-Zoll-Platte bestellen möchtest, lasse die Anzahl auf 0.</p>
+                </section>
+            </div>
+            <p class="note">Du kannst beide Plattentypen in derselben Bestellung kombinieren.</p>
+        </section>
 
-        <p><label>E-Mail:<br>
-        <input type="email" name="E-Mail" required style="width:400px; font-size:22px;"></label></p>
+        <section class="order-panel" aria-labelledby="contact-heading">
+            <h2 id="contact-heading">Kontaktdaten und Versand</h2>
+            <div class="details-grid">
+                <p><label for="name">Name:<br>
+                    <input class="text-input" id="name" type="text" name="Name" autocomplete="name" required>
+                </label></p>
+                <p><label for="email">E-Mail:<br>
+                    <input class="text-input" id="email" type="email" name="E-Mail" autocomplete="email" required>
+                </label></p>
+            </div>
+            <p><label for="address">Versandadresse:<br>
+                <textarea class="address-input" id="address" name="Versandadresse" rows="3" autocomplete="street-address" required></textarea>
+            </label></p>
+            <p><label for="message">Nachricht (optional):<br>
+                <textarea class="address-input" id="message" name="Nachricht" rows="4"></textarea>
+            </label></p>
+        </section>
 
-        <hr style="margin:40px 0;">
-
-        <h2 style="font-size:28px;">12" – bis zu 5 Titel pro Seite</h2>
-
-        <h3>Seite A</h3>
-        <input type="text" name="12_A1" placeholder="Titel A1" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="12_A2" placeholder="Titel A2" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="12_A3" placeholder="Titel A3" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="12_A4" placeholder="Titel A4" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="12_A5" placeholder="Titel A5 (optional)" style="width:100%; font-size:22px;"><br>
-
-        <h3>Seite B</h3>
-        <input type="text" name="12_B1" placeholder="Titel B1" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="12_B2" placeholder="Titel B2" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="12_B3" placeholder="Titel B3" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="12_B4" placeholder="Titel B4" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="12_B5" placeholder="Titel B5 (optional)" style="width:100%; font-size:22px;"><br>
-
-        <hr style="margin:40px 0;">
-
-        <h2 style="font-size:28px;">10" – bis zu 4 Titel pro Seite</h2>
-
-        <h3>Seite A</h3>
-        <input type="text" name="10_A1" placeholder="Titel A1" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="10_A2" placeholder="Titel A2" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="10_A3" placeholder="Titel A3" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="10_A4" placeholder="Titel A4 (optional)" style="width:100%; font-size:22px;"><br>
-
-        <h3>Seite B</h3>
-        <input type="text" name="10_B1" placeholder="Titel B1" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="10_B2" placeholder="Titel B2" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="10_B3" placeholder="Titel B3" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="10_B4" placeholder="Titel B4 (optional)" style="width:100%; font-size:22px;"><br>
-
-        <hr style="margin:40px 0;">
-
-        <h2 style="font-size:28px;">7" – bis zu 3 Titel pro Seite</h2>
-
-        <h3>Seite A</h3>
-        <input type="text" name="7_A1" placeholder="Titel A1" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="7_A2" placeholder="Titel A2" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="7_A3" placeholder="Titel A3 (optional)" style="width:100%; font-size:22px;"><br>
-
-        <h3>Seite B</h3>
-        <input type="text" name="7_B1" placeholder="Titel B1" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="7_B2" placeholder="Titel B2" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="7_B3" placeholder="Titel B3 (optional)" style="width:100%; font-size:22px;"><br>
-
-        <hr style="margin:40px 0;">
-
-        <h2 style="font-size:28px;">5" – bis zu 2 Titel pro Seite</h2>
-
-        <h3>Seite A</h3>
-        <input type="text" name="5_A1" placeholder="Titel A1" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="5_A2" placeholder="Titel A2 (optional)" style="width:100%; font-size:22px;"><br>
-
-        <h3>Seite B</h3>
-        <input type="text" name="5_B1" placeholder="Titel B1" style="width:100%; font-size:22px;"><br>
-        <input type="text" name="5_B2" placeholder="Titel B2 (optional)" style="width:100%; font-size:22px;"><br>
-
-        <hr style="margin:40px 0;">
-
-        <p><label>Anzahl der Schallplatten:<br>
-        <input type="number" name="Anzahl" min="1" value="1" required style="width:120px; font-size:22px;"></label></p>
-
-        <p><label>Versandadresse:<br>
-        <textarea name="Adresse" rows="3" required style="width:400px; font-size:22px;"></textarea></label></p>
-
-        <p><label>Nachricht (optional):<br>
-        <textarea name="Nachricht" rows="4" style="width:400px; font-size:22px;"></textarea></label></p>
-
-        <p>
-            <button type="submit" style="font-size:22px; padding:10px 20px;">
-                Bestellung absenden
-            </button>
-        </p>
-
+        <p><button type="submit">Bestellung absenden</button></p>
+        <p class="note">Hinweis: Das Formular öffnet dein E-Mail-Programm. Bitte kontrolliere dort die Bestellangaben, bevor du die E-Mail abschickst.</p>
     </form>
-
-    <!-- ⭐ PROFESSIONELLER ZAHLUNGSTEXT ⭐ -->
-    <h2 style="font-family:'Franklin Gothic Medium'; font-size:28px; margin-top:40px;">
-        Zahlung
-    </h2>
-
-    <p>
-        Derzeit steht <strong>PayPal</strong> als sichere und schnelle Zahlungsmethode zur Verfügung.  
-        Weitere Zahlungsoptionen — darunter <strong>Banküberweisung</strong> und <strong>Stripe</strong> — befinden sich in Vorbereitung.
-    </p>
-
 </main>
-
 </body>
 </html>
