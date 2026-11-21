@@ -2,15 +2,294 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Bestellung</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bestellung – Späschl Pipe Organs</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        main {
+            font-family: "Franklin Gothic Medium", Arial, sans-serif;
+            font-size: 22px;
+        }
+
+        .order-layout {
+            display: grid;
+            grid-template-columns: minmax(280px, 1fr) minmax(350px, 1fr);
+            gap: 25px;
+            align-items: start;
+        }
+
+        .product-area,
+        .picker-area,
+        .cart-area {
+            border: 1px solid #aaa;
+            background: rgba(255,255,255,0.25);
+            padding: 18px;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .product-button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 21px;
+            color: #000;
+            background: #eee;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .product-button:hover {
+            background: #ddd;
+        }
+
+        .product-button.active {
+            background: #c8c8c8;
+            border: 2px solid #555;
+            font-weight: bold;
+        }
+
+        .picker-area {
+            display: none;
+        }
+
+        .picker-area.visible {
+            display: block;
+        }
+
+        .picker-area select,
+        .form-field {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 100%;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 19px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .image-choice {
+            border: 2px solid #aaa;
+            background: #eee;
+            padding: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            color: #000;
+            text-align: center;
+            min-width: 0;
+        }
+
+        .image-choice:hover {
+            border-color: #555;
+            background: #ddd;
+        }
+
+        .image-choice.selected {
+            border: 3px solid #333;
+            background: #d0d0d0;
+            font-weight: bold;
+        }
+
+        .image-choice img {
+            display: block;
+            width: 100%;
+            height: 115px;
+            object-fit: contain;
+            background: #fff;
+            margin-bottom: 5px;
+        }
+
+        .image-choice .image-error {
+            display: flex;
+            height: 115px;
+            align-items: center;
+            justify-content: center;
+            background: #ddd;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .selected-info {
+            margin-top: 15px;
+            padding: 12px;
+            background: #e5e5e5;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+
+        .selected-info img {
+            display: block;
+            max-width: 100%;
+            max-height: 160px;
+            object-fit: contain;
+            margin-top: 8px;
+        }
+
+        .quantity-row {
+            margin-top: 15px;
+        }
+
+        .quantity-row input {
+            width: 100px;
+            padding: 7px;
+            font-family: inherit;
+            font-size: 19px;
+        }
+
+        .action-button,
+        .submit-button {
+            font-family: inherit;
+            font-size: 19px;
+            padding: 9px 15px;
+            cursor: pointer;
+            border: 1px solid #777;
+            border-radius: 4px;
+            background: #eee;
+            color: #000;
+        }
+
+        .action-button:hover,
+        .submit-button:hover {
+            background: #ddd;
+        }
+
+        .add-button {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .cart-area {
+            margin-top: 30px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #bbb;
+            align-items: center;
+        }
+
+        .cart-item:last-child {
+            border-bottom: 0;
+        }
+
+        .cart-item-details {
+            min-width: 0;
+        }
+
+        .cart-item-details img {
+            display: block;
+            max-width: 120px;
+            max-height: 90px;
+            object-fit: contain;
+            margin-top: 7px;
+            background: #fff;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        .cart-item-actions button {
+            font-family: inherit;
+            font-size: 16px;
+            padding: 6px 9px;
+            cursor: pointer;
+        }
+
+        .cart-empty {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .form-section {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #aaa;
+        }
+
+        .form-section input,
+        .form-section textarea {
+            box-sizing: border-box;
+            max-width: 100%;
+            font-family: inherit;
+            font-size: 20px;
+            padding: 7px;
+        }
+
+        .form-section input[type="text"],
+        .form-section input[type="email"],
+        .form-section textarea {
+            width: 400px;
+        }
+
+        .error-message {
+            color: #a00000;
+            font-size: 17px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 850px) {
+            .order-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .image-choice img,
+            .image-choice .image-error {
+                height: 90px;
+            }
+
+            .form-section input[type="text"],
+            .form-section input[type="email"],
+            .form-section textarea {
+                width: 100%;
+            }
+
+            .cart-item {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-item-actions {
+                justify-content: flex-start;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<main style="font-family:'Franklin Gothic Medium', Arial, sans-serif; font-size:22px;">
+<main>
 
     <p style="margin-top:0;">
-        <a href="index.html" style="font-family:'Franklin Gothic Medium'; font-size:22px;">Startseite</a>
+        <a href="index.html" style="font-family:'Franklin Gothic Medium'; font-size:22px;">
+            Startseite
+        </a>
     </p>
 
     <h1 style="font-family:'Franklin Gothic Medium'; font-size:34px; margin-top:0;">
@@ -18,102 +297,528 @@
     </h1>
 
     <p>
-        Bitte fülle das folgende Formular aus.  
-        Deine Bestellung wird sicher übermittelt.
+        Bitte wähle deine gewünschten Produkte aus und lege sie einzeln in den Warenkorb.
+        Du kannst mehrere unterschiedliche Produkte und Motive hinzufügen.
+        Deine Kontaktdaten gibst du anschließend nur einmal ein.
     </p>
 
-    <!-- ⭐ FORMSPREE FORMULAR ⭐ -->
-    <form action="https://formspree.io/f/xqejbpkj" method="POST"
+    <form id="orderForm"
+          action="https://formspree.io/f/xqejbpkj"
+          method="POST"
           style="font-family:'Franklin Gothic Medium'; font-size:22px;">
 
         <input type="hidden" name="_subject" value="Neue Produktbestellung">
+        <input type="hidden" name="Warenkorb" id="cartEmail">
 
-        <p><label>Name:<br>
-        <input type="text" name="Name" required
-               style="width:400px; font-size:22px;"></label></p>
+        <div class="order-layout">
 
-        <p><label>E-Mail:<br>
-        <input type="email" name="E-Mail" required
-               style="width:400px; font-size:22px;"></label></p>
+            <section class="product-area">
 
-        <p><label>Produkt:<br>
-        <select name="Produkt" required
-                style="width:400px; font-size:22px;">
-            <option value="">Bitte wählen…</option>
-            <option value="Tasse Emaille">Tasse – Emaille</option>
-            <option value="Tasse Keramik">Tasse – Keramik</option>
-            <option value="T-Shirt">T‑Shirt</option>
-            <option value="Grußkarte">Grußkarte</option>
-            <option value="Kissenüberzug">Kissenüberzug 22×22</option>
-            <option value="Sofadecke">Sofadecke 50×60</option>
-            <option value="Bettwäsche">Bettwäsche</option>
-        </select></label></p>
+                <h2 style="font-size:25px; margin-top:0;">
+                    1. Produkt auswählen
+                </h2>
 
-        <p><label>Kategorie:<br>
-        <select name="Kategorie" required
-                style="width:400px; font-size:22px;">
-            <option value="">Bitte wählen…</option>
-            <option>Berglandschaft</option>
-            <option>Berglandschaft m. Wolke</option>
-            <option>Blumeninsel</option>
-            <option>Comic</option>
-            <option>Feuerwerk</option>
-            <option>Geburtstag</option>
-            <option>Hochzeit</option>
-            <option>Kerze</option>
-            <option>Lebkuchenherz</option>
-            <option>Lichternacht</option>
-            <option>Luftballon</option>
-            <option>Neonschild</option>
-            <option>Oldtimertreffen</option>
-            <option>Ostern</option>
-            <option>Planeten</option>
-            <option>Schneekugel</option>
-            <option>Speziell</option>
-            <option>Sprüche</option>
-            <option>Sternbild</option>
-            <option>Tierfreundschaft</option>
-            <option>Uhr</option>
-            <option>Weihnachten</option>
-        </select></label></p>
+                <p style="font-size:18px;">
+                    Bitte klicke auf das gewünschte Produkt:
+                </p>
 
-        <p><label>Motiv (Bildnummer):<br>
-        <input type="text" name="Motiv_Bildnummer" required
-               style="width:400px; font-size:22px;"
-               placeholder="z.B. Bild-Nr. 12"></label></p>
+                <div class="product-list">
 
-        <p><label>Anzahl:<br>
-        <input type="number" name="Anzahl" min="1" value="1" required
-               style="width:120px; font-size:22px;"></label></p>
+                    <button type="button" class="product-button" data-product="Tasse – Emaille">
+                        Tasse – Emaille
+                    </button>
 
-        <p><label>Versandadresse:<br>
-        <textarea name="Adresse" rows="3" required
-                  style="width:400px; font-size:22px;"></textarea></label></p>
+                    <button type="button" class="product-button" data-product="Tasse – Keramik">
+                        Tasse – Keramik
+                    </button>
 
-        <p><label>Nachricht (optional):<br>
-        <textarea name="Nachricht" rows="4"
-                  style="width:400px; font-size:22px;"></textarea></label></p>
+                    <button type="button" class="product-button" data-product="Grußkarte">
+                        Grußkarte
+                    </button>
 
-        <p>
-            <button type="submit"
-                    style="font-size:22px; padding:10px 20px;">
-                Bestellung absenden
-            </button>
-        </p>
+                    <button type="button" class="product-button" data-product="Kissenüberzug">
+                        Kissenüberzug
+                    </button>
+
+                    <button type="button" class="product-button" data-product="Sofadecke">
+                        Sofadecke
+                    </button>
+
+                    <button type="button" class="product-button" data-product="Bettwäsche">
+                        Bettwäsche
+                    </button>
+
+                    <button type="button" class="product-button" data-product="Laterne">
+                        Laterne
+                    </button>
+
+                    <button type="button" class="product-button" data-product="Schlüsselanhänger">
+                        Schlüsselanhänger
+                    </button>
+
+                </div>
+
+            </section>
+
+            <section class="picker-area" id="pickerArea">
+
+                <h2 style="font-size:25px; margin-top:0;">
+                    2. Motiv auswählen
+                </h2>
+
+                <p style="font-size:18px;">
+                    Gewähltes Produkt:
+                    <strong id="chosenProduct">–</strong>
+                </p>
+
+                <label for="categorySelect">
+                    Kategorie:
+                </label>
+
+                <select id="categorySelect">
+                    <option value="">Bitte Kategorie wählen …</option>
+                    <option>Alpenlandschaft</option>
+                    <option>Blumeninsel</option>
+                    <option>Comic</option>
+                    <option>Feuerwerk</option>
+                    <option>Geburtstag</option>
+                    <option>Hochzeit</option>
+                    <option>Handgefertigt</option>
+                    <option>Kerze</option>
+                    <option>Lebkuchenherz</option>
+                    <option>Lichternacht</option>
+                    <option>Luftballon</option>
+                    <option>Neonschild</option>
+                    <option>Nostalgie</option>
+                    <option>Ostern</option>
+                    <option>Planeten</option>
+                    <option>Speziell</option>
+                    <option>Sprüche</option>
+                    <option>Sternbild</option>
+                    <option>Tierfreundschaft</option>
+                    <option>Uhr</option>
+                    <option>Weihnachten</option>
+                </select>
+
+                <div id="imageGrid" class="image-grid"></div>
+
+                <div class="selected-info">
+                    <strong>Ausgewähltes Motiv:</strong>
+                    <div id="selectedImageText" style="font-size:18px;">
+                        Noch kein Bild ausgewählt.
+                    </div>
+                    <img id="selectedImagePreview" src="" alt="" style="display:none;">
+                </div>
+
+                <div class="quantity-row">
+                    <label for="itemQuantity">Anzahl:</label><br>
+                    <input type="number" id="itemQuantity" min="1" step="1" value="1">
+                </div>
+
+                <button type="button" id="addToCartButton" class="action-button add-button">
+                    In den Warenkorb legen
+                </button>
+
+                <p id="pickerError" class="error-message" role="alert"></p>
+
+            </section>
+
+        </div>
+
+        <section class="cart-area">
+
+            <h2 style="font-size:27px; margin-top:0;">
+                3. Warenkorb
+            </h2>
+
+            <div id="cartItems">
+                <p class="cart-empty">Dein Warenkorb ist noch leer.</p>
+            </div>
+
+            <p style="font-size:18px; margin-bottom:0;">
+                Du kannst weitere Produkte auswählen und hinzufügen, bevor du die Bestellung absendest.
+            </p>
+
+        </section>
+
+        <div class="form-section">
+
+            <h2 style="font-size:27px;">
+                4. Kontaktdaten und Bestellung absenden
+            </h2>
+
+            <p>
+                <label>Name:<br>
+                    <input type="text" name="Name" required>
+                </label>
+            </p>
+
+            <p>
+                <label>E-Mail:<br>
+                    <input type="email" name="E-Mail" required>
+                </label>
+            </p>
+
+            <p>
+                <label>Versandadresse:<br>
+                    <textarea name="Adresse" rows="3" required></textarea>
+                </label>
+            </p>
+
+            <p>
+                <label>Nachricht (optional):<br>
+                    <textarea name="Nachricht" rows="4"></textarea>
+                </label>
+            </p>
+
+            <p id="formError" class="error-message" role="alert"></p>
+
+            <p>
+                <button type="submit" class="submit-button">
+                    Gesamte Bestellung absenden
+                </button>
+            </p>
+
+        </div>
 
     </form>
 
-    <!-- ⭐ PROFESSIONELLER ZAHLUNGSTEXT ⭐ -->
     <h2 style="font-family:'Franklin Gothic Medium'; font-size:28px; margin-top:40px;">
         Zahlung
     </h2>
 
     <p>
-        Derzeit steht <strong>PayPal</strong> als sichere und schnelle Zahlungsmethode zur Verfügung.  
-        Weitere Zahlungsoptionen — darunter <strong>Banküberweisung</strong> und <strong>Stripe</strong> — befinden sich in Vorbereitung.
+        Als Zahlungsmethoden stehen <strong>Vorkasse per Banküberweisung</strong>
+        und <strong>PayPal</strong> zur Verfügung.
+        Bei Zahlung per Vorkasse erfolgt die Überweisung vor der Herstellung
+        beziehungsweise dem Versand der Bestellung.
     </p>
 
 </main>
+
+<script>
+    const productButtons = document.querySelectorAll(".product-button");
+    const pickerArea = document.getElementById("pickerArea");
+    const chosenProduct = document.getElementById("chosenProduct");
+    const categorySelect = document.getElementById("categorySelect");
+    const imageGrid = document.getElementById("imageGrid");
+
+    const selectedImageText = document.getElementById("selectedImageText");
+    const selectedImagePreview = document.getElementById("selectedImagePreview");
+    const itemQuantity = document.getElementById("itemQuantity");
+
+    const addToCartButton = document.getElementById("addToCartButton");
+    const pickerError = document.getElementById("pickerError");
+    const cartItemsContainer = document.getElementById("cartItems");
+    const cartEmail = document.getElementById("cartEmail");
+
+    const form = document.getElementById("orderForm");
+    const formError = document.getElementById("formError");
+
+    let selectedProduct = "";
+    let selectedCategory = "";
+    let selectedImageNumber = "";
+    let selectedImagePath = "";
+    let editingIndex = null;
+
+    const cart = [];
+
+    const imageCounts = {
+        "Handgefertigt": 3
+    };
+
+    const defaultImageCount = 4;
+
+    function resetMotifSelection() {
+        selectedCategory = "";
+        selectedImageNumber = "";
+        selectedImagePath = "";
+        categorySelect.value = "";
+        imageGrid.innerHTML = "";
+        selectedImageText.textContent = "Noch kein Bild ausgewählt.";
+        selectedImagePreview.style.display = "none";
+        selectedImagePreview.src = "";
+    }
+
+    productButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            // Beim Wechsel zu einem anderen Produkt wird eine laufende Bearbeitung abgebrochen.
+            editingIndex = null;
+            addToCartButton.textContent = "In den Warenkorb legen";
+            resetMotifSelection();
+            itemQuantity.value = 1;
+
+            selectedProduct = this.dataset.product;
+            chosenProduct.textContent = selectedProduct;
+
+            productButtons.forEach(item => item.classList.remove("active"));
+            this.classList.add("active");
+
+            pickerArea.classList.add("visible");
+            pickerError.textContent = "";
+            formError.textContent = "";
+        });
+    });
+
+    categorySelect.addEventListener("change", function () {
+        selectedCategory = this.value;
+        selectedImageNumber = "";
+        selectedImagePath = "";
+
+        selectedImageText.textContent = "Noch kein Bild ausgewählt.";
+        selectedImagePreview.style.display = "none";
+        selectedImagePreview.src = "";
+        imageGrid.innerHTML = "";
+
+        if (!selectedCategory) {
+            return;
+        }
+
+        const count = imageCounts[selectedCategory] || defaultImageCount;
+
+        for (let number = 1; number <= count; number++) {
+            const imagePath =
+                "bilder/" + encodeURIComponent(selectedCategory) +
+                "_" + number + ".jpeg";
+
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "image-choice";
+
+            const img = document.createElement("img");
+            img.src = imagePath;
+            img.alt = selectedCategory + " – Bild " + number;
+
+            img.onerror = function () {
+                const fallback = document.createElement("div");
+                fallback.className = "image-error";
+                fallback.textContent = "Bilddatei nicht gefunden";
+                this.replaceWith(fallback);
+            };
+
+            const caption = document.createElement("span");
+            caption.textContent = "Bild " + number;
+
+            button.appendChild(img);
+            button.appendChild(caption);
+
+            button.addEventListener("click", function () {
+                selectedImageNumber = number;
+                selectedImagePath = imagePath;
+
+                selectedImageText.textContent =
+                    selectedCategory + " – Bild " + number;
+
+                selectedImagePreview.src = imagePath;
+                selectedImagePreview.alt =
+                    selectedCategory + " – Bild " + number;
+                selectedImagePreview.style.display = "block";
+
+                imageGrid.querySelectorAll(".image-choice").forEach(item => {
+                    item.classList.remove("selected");
+                });
+
+                button.classList.add("selected");
+                pickerError.textContent = "";
+            });
+
+            imageGrid.appendChild(button);
+        }
+    });
+
+    function updateCartDisplay() {
+        cartItemsContainer.innerHTML = "";
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML =
+                '<p class="cart-empty">Dein Warenkorb ist noch leer.</p>';
+            cartEmail.value = "";
+            return;
+        }
+
+        cart.forEach((item, index) => {
+            const row = document.createElement("div");
+            row.className = "cart-item";
+
+            const details = document.createElement("div");
+            details.className = "cart-item-details";
+
+            const title = document.createElement("strong");
+            title.textContent = item.product;
+
+            const description = document.createElement("div");
+            description.textContent =
+                item.category + " – Bild " + item.imageNumber +
+                " · Anzahl: " + item.quantity;
+
+            details.appendChild(title);
+            details.appendChild(description);
+
+            if (item.imagePath) {
+                const preview = document.createElement("img");
+                preview.src = item.imagePath;
+                preview.alt = item.category + " – Bild " + item.imageNumber;
+                details.appendChild(preview);
+            }
+
+            const actions = document.createElement("div");
+            actions.className = "cart-item-actions";
+
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.textContent = "Bearbeiten";
+            editButton.addEventListener("click", () => editCartItem(index));
+
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.textContent = "Entfernen";
+            removeButton.addEventListener("click", () => removeCartItem(index));
+
+            actions.appendChild(editButton);
+            actions.appendChild(removeButton);
+
+            row.appendChild(details);
+            row.appendChild(actions);
+            cartItemsContainer.appendChild(row);
+        });
+
+        cartEmail.value = cart.map((item, index) => {
+            return (
+                (index + 1) + ". " + item.product +
+                "\n   Kategorie: " + item.category +
+                "\n   Motiv: Bild " + item.imageNumber +
+                "\n   Anzahl: " + item.quantity
+            );
+        }).join("\n\n");
+    }
+
+    function editCartItem(index) {
+        const item = cart[index];
+
+        editingIndex = index;
+        selectedProduct = item.product;
+        selectedCategory = item.category;
+        selectedImageNumber = item.imageNumber;
+        selectedImagePath = item.imagePath;
+
+        chosenProduct.textContent = item.product;
+        categorySelect.value = item.category;
+        itemQuantity.value = item.quantity;
+
+        productButtons.forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.product === item.product
+            );
+        });
+
+        pickerArea.classList.add("visible");
+        addToCartButton.textContent = "Änderungen übernehmen";
+        pickerError.textContent = "";
+
+        categorySelect.dispatchEvent(new Event("change"));
+
+        const selectedButton = Array.from(
+            imageGrid.querySelectorAll(".image-choice")
+        ).find(button => {
+            const caption = button.querySelector("span");
+            return caption && caption.textContent === "Bild " + item.imageNumber;
+        });
+
+        if (selectedButton) {
+            selectedButton.click();
+        }
+
+        document.getElementById("pickerArea").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    function removeCartItem(index) {
+        cart.splice(index, 1);
+
+        if (editingIndex === index) {
+            editingIndex = null;
+            addToCartButton.textContent = "In den Warenkorb legen";
+        } else if (editingIndex !== null && editingIndex > index) {
+            editingIndex--;
+        }
+
+        updateCartDisplay();
+    }
+
+    addToCartButton.addEventListener("click", function () {
+        if (!selectedProduct) {
+            pickerError.textContent = "Bitte wähle zuerst ein Produkt aus.";
+            return;
+        }
+
+        if (!selectedCategory || !selectedImageNumber) {
+            pickerError.textContent =
+                "Bitte wähle eine Kategorie und ein Bildmotiv aus.";
+            return;
+        }
+
+        const quantity = Number(itemQuantity.value);
+
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            pickerError.textContent = "Bitte gib eine gültige Anzahl ein.";
+            return;
+        }
+
+        const item = {
+            product: selectedProduct,
+            category: selectedCategory,
+            imageNumber: selectedImageNumber,
+            imagePath: selectedImagePath,
+            quantity: quantity
+        };
+
+        if (editingIndex !== null) {
+            cart[editingIndex] = item;
+            editingIndex = null;
+            addToCartButton.textContent = "In den Warenkorb legen";
+        } else {
+            cart.push(item);
+        }
+
+        updateCartDisplay();
+        resetMotifSelection();
+        itemQuantity.value = 1;
+
+        productButtons.forEach(button => button.classList.remove("active"));
+        selectedProduct = "";
+        chosenProduct.textContent = "–";
+        pickerArea.classList.remove("visible");
+
+        pickerError.textContent = "";
+        formError.textContent = "";
+
+        document.querySelector(".cart-area").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    });
+
+    form.addEventListener("submit", function (event) {
+        if (cart.length === 0) {
+            event.preventDefault();
+            formError.textContent =
+                "Dein Warenkorb ist noch leer. Bitte füge mindestens ein Produkt hinzu.";
+            document.querySelector(".cart-area").scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+            return;
+        }
+
+        updateCartDisplay();
+        formError.textContent = "";
+    });
+
+    updateCartDisplay();
+</script>
 
 </body>
 </html>
