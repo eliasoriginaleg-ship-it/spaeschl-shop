@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -207,6 +208,11 @@
             background: #fff;
         }
 
+        .cart-item-price {
+            margin-top: 5px;
+            font-size: 18px;
+        }
+
         .cart-item-actions {
             display: flex;
             flex-wrap: wrap;
@@ -224,6 +230,30 @@
         .cart-empty {
             font-size: 18px;
             color: #555;
+        }
+
+        .cart-totals {
+            margin-top: 18px;
+            padding: 14px;
+            background: #e5e5e5;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            font-size: 19px;
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 5px 0;
+        }
+
+        .cart-grand-total {
+            border-top: 1px solid #888;
+            margin-top: 8px;
+            padding-top: 12px;
+            font-size: 23px;
+            font-weight: bold;
         }
 
         .form-section {
@@ -325,35 +355,35 @@
                 <div class="product-list">
 
                     <button type="button" class="product-button" data-product="Tasse – Emaille">
-                        Tasse – Emaille
+                        Tasse – Emaille (21,38 €)
                     </button>
 
                     <button type="button" class="product-button" data-product="Tasse – Keramik">
-                        Tasse – Keramik
+                        Tasse – Keramik (14,19 €)
                     </button>
 
                     <button type="button" class="product-button" data-product="Grußkarte">
-                        Grußkarte
+                        Grußkarte (9,02 €)
                     </button>
 
                     <button type="button" class="product-button" data-product="Kissenüberzug">
-                        Kissenüberzug
+                        Kissenüberzug (30,61 €)
                     </button>
 
                     <button type="button" class="product-button" data-product="Sofadecke">
-                        Sofadecke
+                        Sofadecke (39,46 €)
                     </button>
 
                     <button type="button" class="product-button" data-product="Bettwäsche">
-                        Bettwäsche
+                        Bettwäsche (56,49 €)
                     </button>
 
                     <button type="button" class="product-button" data-product="Laterne">
-                        Laterne
+                        Laterne (17,68 €)
                     </button>
 
                     <button type="button" class="product-button" data-product="Schlüsselanhänger">
-                        Schlüsselanhänger
+                        Schlüsselanhänger (5,00 €)
                     </button>
 
                 </div>
@@ -369,6 +399,11 @@
                 <p style="font-size:18px;">
                     Gewähltes Produkt:
                     <strong id="chosenProduct">–</strong>
+                </p>
+
+                <p style="font-size:18px; margin-top:-8px;">
+                    Einzelpreis:
+                    <strong id="chosenPrice">–</strong>
                 </p>
 
                 <label for="categorySelect">
@@ -433,6 +468,25 @@
 
             <div id="cartItems">
                 <p class="cart-empty">Dein Warenkorb ist noch leer.</p>
+            </div>
+
+            <div id="cartTotals" class="cart-totals" style="display:none;">
+
+                <div class="cart-total-row">
+                    <span>Zwischensumme:</span>
+                    <strong id="cartSubtotal">0,00 €</strong>
+                </div>
+
+                <div class="cart-total-row">
+                    <span>Versandkosten:</span>
+                    <strong id="cartShipping">5,00 €</strong>
+                </div>
+
+                <div class="cart-total-row cart-grand-total">
+                    <span>Gesamtbetrag:</span>
+                    <strong id="cartGrandTotal">0,00 €</strong>
+                </div>
+
             </div>
 
             <p style="font-size:18px; margin-bottom:0;">
@@ -500,6 +554,7 @@
     const productButtons = document.querySelectorAll(".product-button");
     const pickerArea = document.getElementById("pickerArea");
     const chosenProduct = document.getElementById("chosenProduct");
+    const chosenPrice = document.getElementById("chosenPrice");
     const categorySelect = document.getElementById("categorySelect");
     const imageGrid = document.getElementById("imageGrid");
 
@@ -512,6 +567,11 @@
     const cartItemsContainer = document.getElementById("cartItems");
     const cartEmail = document.getElementById("cartEmail");
 
+    const cartTotals = document.getElementById("cartTotals");
+    const cartSubtotal = document.getElementById("cartSubtotal");
+    const cartShipping = document.getElementById("cartShipping");
+    const cartGrandTotal = document.getElementById("cartGrandTotal");
+
     const form = document.getElementById("orderForm");
     const formError = document.getElementById("formError");
 
@@ -522,6 +582,24 @@
     let editingIndex = null;
 
     const cart = [];
+
+    // Alle Preise werden in Cent gespeichert, damit es keine Rundungsfehler gibt.
+    const productPrices = {
+        "Tasse – Emaille": 2138,
+        "Tasse – Keramik": 1419,
+        "Grußkarte": 902,
+        "Kissenüberzug": 3061,
+        "Sofadecke": 3946,
+        "Bettwäsche": 5649,
+        "Laterne": 1768,
+        "Schlüsselanhänger": 500
+    };
+
+    const SHIPPING_CENTS = 500;
+
+    function formatEuro(cents) {
+        return (cents / 100).toFixed(2).replace(".", ",") + " €";
+    }
 
     const imageCounts = {
         "Handgefertigt": 3
@@ -542,14 +620,18 @@
 
     productButtons.forEach(button => {
         button.addEventListener("click", function () {
+
             // Beim Wechsel zu einem anderen Produkt wird eine laufende Bearbeitung abgebrochen.
             editingIndex = null;
             addToCartButton.textContent = "In den Warenkorb legen";
+
             resetMotifSelection();
             itemQuantity.value = 1;
 
             selectedProduct = this.dataset.product;
+
             chosenProduct.textContent = selectedProduct;
+            chosenPrice.textContent = formatEuro(productPrices[selectedProduct]);
 
             productButtons.forEach(item => item.classList.remove("active"));
             this.classList.add("active");
@@ -577,6 +659,7 @@
         const count = imageCounts[selectedCategory] || defaultImageCount;
 
         for (let number = 1; number <= count; number++) {
+
             const imagePath =
                 "bilder/" + encodeURIComponent(selectedCategory) +
                 "_" + number + ".jpeg";
@@ -603,6 +686,7 @@
             button.appendChild(caption);
 
             button.addEventListener("click", function () {
+
                 selectedImageNumber = number;
                 selectedImagePath = imagePath;
 
@@ -627,16 +711,29 @@
     });
 
     function updateCartDisplay() {
+
         cartItemsContainer.innerHTML = "";
 
         if (cart.length === 0) {
+
             cartItemsContainer.innerHTML =
                 '<p class="cart-empty">Dein Warenkorb ist noch leer.</p>';
+
+            cartTotals.style.display = "none";
             cartEmail.value = "";
+
             return;
         }
 
+        let subtotal = 0;
+
         cart.forEach((item, index) => {
+
+            const unitPrice = productPrices[item.product];
+            const lineTotal = unitPrice * item.quantity;
+
+            subtotal += lineTotal;
+
             const row = document.createElement("div");
             row.className = "cart-item";
 
@@ -651,8 +748,15 @@
                 item.category + " – Bild " + item.imageNumber +
                 " · Anzahl: " + item.quantity;
 
+            const priceDetails = document.createElement("div");
+            priceDetails.className = "cart-item-price";
+            priceDetails.textContent =
+                "Einzelpreis: " + formatEuro(unitPrice) +
+                " · Gesamt: " + formatEuro(lineTotal);
+
             details.appendChild(title);
             details.appendChild(description);
+            details.appendChild(priceDetails);
 
             if (item.imagePath) {
                 const preview = document.createElement("img");
@@ -679,20 +783,45 @@
 
             row.appendChild(details);
             row.appendChild(actions);
+
             cartItemsContainer.appendChild(row);
         });
 
-        cartEmail.value = cart.map((item, index) => {
+        const grandTotal = subtotal + SHIPPING_CENTS;
+
+        cartSubtotal.textContent = formatEuro(subtotal);
+        cartShipping.textContent = formatEuro(SHIPPING_CENTS);
+        cartGrandTotal.textContent = formatEuro(grandTotal);
+
+        cartTotals.style.display = "block";
+
+        // Vollständige Bestellübersicht für die Formspree-E-Mail.
+        const emailItems = cart.map((item, index) => {
+
+            const unitPrice = productPrices[item.product];
+            const lineTotal = unitPrice * item.quantity;
+
             return (
                 (index + 1) + ". " + item.product +
                 "\n   Kategorie: " + item.category +
                 "\n   Motiv: Bild " + item.imageNumber +
-                "\n   Anzahl: " + item.quantity
+                "\n   Anzahl: " + item.quantity +
+                "\n   Einzelpreis: " + formatEuro(unitPrice) +
+                "\n   Positionssumme: " + formatEuro(lineTotal)
             );
+
         }).join("\n\n");
+
+        cartEmail.value =
+            emailItems +
+            "\n\n------------------------------" +
+            "\nZwischensumme: " + formatEuro(subtotal) +
+            "\nVersandkosten: " + formatEuro(SHIPPING_CENTS) +
+            "\nGesamtbetrag: " + formatEuro(grandTotal);
     }
 
     function editCartItem(index) {
+
         const item = cart[index];
 
         editingIndex = index;
@@ -702,6 +831,8 @@
         selectedImagePath = item.imagePath;
 
         chosenProduct.textContent = item.product;
+        chosenPrice.textContent = formatEuro(productPrices[item.product]);
+
         categorySelect.value = item.category;
         itemQuantity.value = item.quantity;
 
@@ -736,6 +867,7 @@
     }
 
     function removeCartItem(index) {
+
         cart.splice(index, 1);
 
         if (editingIndex === index) {
@@ -749,6 +881,7 @@
     }
 
     addToCartButton.addEventListener("click", function () {
+
         if (!selectedProduct) {
             pickerError.textContent = "Bitte wähle zuerst ein Produkt aus.";
             return;
@@ -776,20 +909,28 @@
         };
 
         if (editingIndex !== null) {
+
             cart[editingIndex] = item;
             editingIndex = null;
+
             addToCartButton.textContent = "In den Warenkorb legen";
+
         } else {
+
             cart.push(item);
         }
 
         updateCartDisplay();
+
         resetMotifSelection();
         itemQuantity.value = 1;
 
         productButtons.forEach(button => button.classList.remove("active"));
+
         selectedProduct = "";
         chosenProduct.textContent = "–";
+        chosenPrice.textContent = "–";
+
         pickerArea.classList.remove("visible");
 
         pickerError.textContent = "";
@@ -802,14 +943,19 @@
     });
 
     form.addEventListener("submit", function (event) {
+
         if (cart.length === 0) {
+
             event.preventDefault();
+
             formError.textContent =
                 "Dein Warenkorb ist noch leer. Bitte füge mindestens ein Produkt hinzu.";
+
             document.querySelector(".cart-area").scrollIntoView({
                 behavior: "smooth",
                 block: "center"
             });
+
             return;
         }
 
